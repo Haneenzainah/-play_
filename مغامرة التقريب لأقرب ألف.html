@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مغامرة التقريب لأقرب ألف - للصف الثالث الابتدائي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#6C5CE7',
+                            pink: '#FD79A8',
+                            yellow: '#FDCB6E',
+                            green: '#00B894',
+                            blue: '#0984E3',
+                            orange: '#E17055',
+                            dark: '#2D3436',
+                            lightBg: '#F0F3F8'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            background: linear-gradient(135deg, #E0F2FE 0%, #F0FDF4 50%, #FAF5FF 100%);
+            min-height: 100vh;
+        }
+
+        .bounce-gentle {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .btn-card {
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-card:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-card:active:not(:disabled) {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-gray-800 justify-between p-3 sm:p-6">
+
+    <!-- Top Bar Header -->
+    <header class="w-full max-w-4xl mx-auto flex items-center justify-between bg-white/80 backdrop-blur-md rounded-2xl p-4 shadow-sm border border-white mb-4">
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <div class="bg-brand-purple text-white p-2.5 rounded-xl text-xl shadow-md">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-base sm:text-lg text-brand-dark">الرياضيات - الصف الثالث الابتدائي</h1>
+                <p class="text-xs text-gray-500 font-semibold">درس: التقريب لأقرب ألف</p>
+            </div>
+        </div>
+        <div id="header-score-tag" class="hidden items-center bg-yellow-100 border border-yellow-300 px-3 py-1.5 rounded-full text-yellow-800 font-bold text-sm">
+            <i class="fa-solid fa-star text-yellow-500 ml-1.5 animate-spin"></i>
+            <span>النقاط: <span id="current-score-val">٠</span></span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-4xl mx-auto flex-grow flex items-center justify-center my-auto">
+        
+        <!-- SCREEN 1: Welcome Screen -->
+        <div id="screen-welcome" class="w-full glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl text-center flex flex-col items-center border border-white relative overflow-hidden">
+            <!-- Decorative Elements -->
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-200 rounded-full blur-2xl opacity-60"></div>
+            <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-yellow-200 rounded-full blur-2xl opacity-60"></div>
+
+            <div class="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-tr from-brand-purple to-indigo-500 text-white rounded-3xl flex items-center justify-center text-4xl sm:text-5xl shadow-lg mb-6 bounce-gentle">
+                <i class="fa-solid fa-compass"></i>
+            </div>
+
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-brand-purple mb-3 tracking-tight">
+                مغامرة التقريب لأقرب ألف
+            </h1>
+            <p class="inline-block bg-purple-100 text-brand-purple text-sm sm:text-base font-bold px-4 py-1.5 rounded-full mb-4">
+                الصف الثالث الابتدائي
+            </p>
+            
+            <p class="text-gray-600 text-base sm:text-lg font-semibold max-w-md mb-8">
+                هل أنت مستعد لتصبح بطل التقريب؟ 🚀✨
+            </p>
+
+            <button onclick="goToNameScreen()" class="btn-card w-full max-w-xs bg-gradient-to-r from-brand-purple to-indigo-600 text-white font-extrabold text-xl py-4 px-8 rounded-2xl shadow-xl flex items-center justify-center space-x-3 space-x-reverse cursor-pointer">
+                <span>ابدأ المغامرة</span>
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+
+            <!-- Teacher Name Footer -->
+            <div class="mt-10 pt-4 border-t border-gray-100 w-full text-center">
+                <p class="text-sm font-bold text-gray-500">
+                    <i class="fa-solid fa-pen-nib text-brand-purple ml-1"></i>
+                    إعداد المعلمة حنين زينه
+                </p>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: Name Input Screen -->
+        <div id="screen-name" class="hidden w-full glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl text-center flex flex-col items-center border border-white">
+            <div class="w-20 h-20 bg-emerald-100 text-brand-green rounded-2xl flex items-center justify-center text-3xl mb-4">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-2">
+                مرحباً بك يا بطل!
+            </h2>
+            <p class="text-gray-600 text-base mb-6 font-semibold">
+                اكتب اسمك يا بطل للبدء في التحدي:
+            </p>
+
+            <div class="w-full max-w-md mb-6">
+                <input type="text" id="student-name-input" placeholder="ادخل اسمك هنا..." 
+                    class="w-full text-center text-xl font-bold py-4 px-6 rounded-2xl border-2 border-purple-200 focus:border-brand-purple focus:outline-none shadow-inner transition-all bg-white text-gray-800">
+                <p id="name-error" class="text-red-500 font-bold text-sm mt-2 hidden">الرجاء كتابة الاسم للانتقال للعب!</p>
+            </div>
+
+            <button onclick="startGame()" class="btn-card w-full max-w-md bg-brand-green hover:bg-emerald-600 text-white font-extrabold text-xl py-4 px-8 rounded-2xl shadow-xl flex items-center justify-center space-x-2 space-x-reverse cursor-pointer">
+                <span>ابدأ</span>
+                <i class="fa-solid fa-play"></i>
+            </button>
+        </div>
+
+        <!-- SCREEN 3: Game Screen -->
+        <div id="screen-game" class="hidden w-full glass-panel rounded-3xl p-5 sm:p-8 shadow-2xl flex flex-col border border-white">
+            <!-- Game Progress Header -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-4 border-b border-gray-100">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <span id="player-greeting" class="font-extrabold text-brand-purple text-base sm:text-lg"></span>
+                </div>
+                <div class="bg-purple-100 text-brand-purple font-bold px-4 py-1.5 rounded-full text-sm">
+                    <span id="progress-text">السؤال ١ من ٨</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden mb-6">
+                <div id="progress-bar-fill" class="bg-gradient-to-r from-brand-purple to-brand-blue h-full transition-all duration-500" style="width: 12.5%;"></div>
+            </div>
+
+            <!-- Question Section Header Tag -->
+            <div id="question-header-tag" class="bg-blue-50 text-brand-blue border border-blue-200 text-sm font-bold px-4 py-2 rounded-xl mb-4 text-center">
+                <!-- Section Title from Textbook -->
+            </div>
+
+            <!-- Question Box -->
+            <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 text-center mb-6 min-h-[140px] flex flex-col justify-center items-center">
+                <h3 id="question-text" class="text-2xl sm:text-3xl font-extrabold text-gray-800 leading-snug">
+                    <!-- Question wording inserted here -->
+                </h3>
+
+                <!-- Visual Hint Helper (Hundreds digit highlight explanation) -->
+                <div id="visual-hint" class="mt-4 pt-4 border-t border-gray-100 w-full flex items-center justify-center text-xs sm:text-sm text-gray-500">
+                    <i class="fa-solid fa-lightbulb text-yellow-500 ml-1.5"></i>
+                    <span>تلميح: انظر إلى منزلة المئات لتحديد التقريب الصحيح!</span>
+                </div>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Options buttons rendered dynamically -->
+            </div>
+
+            <!-- Feedback Alert Banner -->
+            <div id="feedback-banner" class="hidden rounded-2xl p-4 text-center font-bold text-lg mb-4 transition-all">
+                <span id="feedback-message"></span>
+            </div>
+
+            <!-- Next Button -->
+            <div class="flex justify-end">
+                <button id="next-btn" onclick="nextQuestion()" class="hidden btn-card bg-brand-purple hover:bg-indigo-700 text-white font-extrabold text-lg py-3.5 px-8 rounded-xl shadow-lg flex items-center space-x-2 space-x-reverse cursor-pointer">
+                    <span>السؤال التالي</span>
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: Results Screen -->
+        <div id="screen-results" class="hidden w-full glass-panel rounded-3xl p-6 sm:p-10 shadow-2xl text-center flex flex-col items-center border border-white">
+            <div class="w-24 h-24 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center text-5xl mb-4 bounce-gentle shadow-inner">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+
+            <h2 class="text-3xl font-black text-gray-800 mb-1">
+                انتهت المغامرة! 🎉
+            </h2>
+            <p id="results-student-name" class="text-xl font-bold text-brand-purple mb-4">
+                أحسنت يا بطل!
+            </p>
+
+            <!-- Score Box -->
+            <div class="bg-gradient-to-br from-purple-500 to-indigo-600 text-white rounded-3xl p-6 w-full max-w-sm mb-6 shadow-xl">
+                <p class="text-sm font-semibold opacity-90 mb-1">النتيجة النهائية</p>
+                <div class="text-4xl sm:text-5xl font-black my-2" id="final-score-display">
+                    ٨ من ٨
+                </div>
+                <div id="stars-rating" class="text-yellow-300 text-2xl mt-2 space-x-1 space-x-reverse">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+
+            <p id="motivational-msg" class="text-lg font-bold text-gray-700 mb-8">
+                ممتاز! أنت بطل التقريب 🌟
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+                <button onclick="restartGame()" class="btn-card flex-1 bg-brand-purple text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg flex items-center justify-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>إعادة اللعب</span>
+                </button>
+                <button onclick="toggleReviewModal(true)" class="btn-card flex-1 bg-white text-brand-purple border-2 border-brand-purple font-extrabold py-4 px-6 rounded-2xl shadow-md flex items-center justify-center space-x-2 space-x-reverse">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>مراجعة الإجابات</span>
+                </button>
+            </div>
+
+            <!-- Teacher Name Footer -->
+            <div class="mt-10 pt-4 border-t border-gray-100 w-full text-center">
+                <p class="text-sm font-bold text-gray-500">
+                    <i class="fa-solid fa-pen-nib text-brand-purple ml-1"></i>
+                    إعداد المعلمة حنين زينه
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Review Answers Modal -->
+    <div id="review-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="bg-brand-purple text-white p-5 flex items-center justify-between">
+                <h3 class="font-extrabold text-xl flex items-center">
+                    <i class="fa-solid fa-clipboard-check ml-2"></i>
+                    مراجعة أسئلة درس التقريب
+                </h3>
+                <button onclick="toggleReviewModal(false)" class="text-white/80 hover:text-white text-2xl font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="review-list" class="p-6 overflow-y-auto space-y-4">
+                <!-- Review items injected here -->
+            </div>
+            <div class="p-4 bg-gray-50 border-t text-center">
+                <button onclick="toggleReviewModal(false)" class="bg-gray-800 text-white font-bold py-2.5 px-8 rounded-xl">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* 
+           Game Data & Questions derived strictly from textbook photos provided:
+           Section 1: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:"
+           Questions 1 through 6
+           Section 2: "أَحُلُّ كُلًّا مِنَ المَسْأَلَتَيْنِ الآتِيَتَيْنِ:"
+           Questions 7 and 8
+        */
+
+        const questionsData = [
+            {
+                id: 1,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "٤٥٦٩",
+                options: ["٤٠٠٠", "٥٠٠٠", "٤٦٠٠", "٥٥٠٠"],
+                answer: "٥٠٠٠",
+                number: "١"
+            },
+            {
+                id: 2,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "١٢٨٤",
+                options: ["١٠٠٠", "٢٠٠٠", "١٣٠٠", "١٢٠٠"],
+                answer: "١٠٠٠",
+                number: "٢"
+            },
+            {
+                id: 3,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "٨٨٧٧",
+                options: ["٨٠٠٠", "٩٠٠٠", "٨٩٠٠", "٩٥٠٠"],
+                answer: "٩٠٠٠",
+                number: "٣"
+            },
+            {
+                id: 4,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "٣٥٦٩",
+                options: ["٣٠٠٠", "٤٠٠٠", "٣٦٠٠", "٥٠٠٠"],
+                answer: "٤٠٠٠",
+                number: "٤"
+            },
+            {
+                id: 5,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "٤٨٨٠",
+                options: ["٤٠٠٠", "٥٠٠٠", "٤٩٠٠", "٤٥٠٠"],
+                answer: "٥٠٠٠",
+                number: "٥"
+            },
+            {
+                id: 6,
+                section: "أُقَرِّبُ الأَعْدَادَ الآتِيَةَ إِلَى أَقْرَبِ أَلْفٍ:",
+                question: "١٢٨٩٩",
+                options: ["١٢٠٠٠", "١٣٠٠٠", "١٢٩٠٠", "١٤٠٠٠"],
+                answer: "١٣٠٠٠",
+                number: "٦"
+            },
+            {
+                id: 7,
+                section: "أَحُلُّ كُلًّا مِنَ المَسْأَلَتَيْنِ الآتِيَتَيْنِ:",
+                question: "سَافَرَ حَمْدَانُ مَسَافَةَ ١٤٨٧ كِيلُومِتْرًا بِالطَّائِرَةِ. أُقَرِّبُ هَذِهِ المَسَافَةَ إِلَى أَقْرَبِ أَلْفٍ.",
+                options: ["١٠٠٠", "١٥٠٠", "٢٠٠٠", "١٤٠٠"],
+                answer: "١٠٠٠",
+                number: "٧"
+            },
+            {
+                id: 8,
+                section: "أَحُلُّ كُلًّا مِنَ المَسْأَلَتَيْنِ الآتِيَتَيْنِ:",
+                question: "اِشْتَرَى خَالِدٌ سَيَّارَةً بِـ ٢٣٥٥٠ رِيَالًا. كَمْ رِيَالًا ثَمَنُ السَّيَّارَةِ مُقَرَّبًا إِلَى أَقْرَبِ أَلْفٍ؟",
+                options: ["٢٣٠٠٠", "٢٣٥٠٠", "٢٤٠٠٠", "٢٥٠٠٠"],
+                answer: "٢٤٠٠٠",
+                number: "٨"
+            }
+        ];
+
+        // Eastern Arabic numerals helper map
+        const easternNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        function toEasternDigits(num) {
+            return num.toString().replace(/\d/g, d => easternNumbers[d]);
+        }
+
+        // Game State Variable
+        let gameState = {
+            studentName: '',
+            currentIndex: 0,
+            score: 0,
+            userAnswers: []
+        };
+
+        // Web Audio API Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.setValueAtTime(174.61, audioCtx.currentTime + 0.15); // F3
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            }
+        }
+
+        // Navigation Functions
+        function goToNameScreen() {
+            document.getElementById('screen-welcome').classList.add('hidden');
+            document.getElementById('screen-name').classList.remove('hidden');
+            document.getElementById('student-name-input').focus();
+        }
+
+        function startGame() {
+            const input = document.getElementById('student-name-input');
+            const name = input.value.trim();
+            if (!name) {
+                document.getElementById('name-error').classList.remove('hidden');
+                return;
+            }
+
+            gameState.studentName = name;
+            gameState.currentIndex = 0;
+            gameState.score = 0;
+            gameState.userAnswers = [];
+
+            document.getElementById('screen-name').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('header-score-tag').classList.remove('hidden');
+            document.getElementById('header-score-tag').classList.add('flex');
+            
+            document.getElementById('player-greeting').innerText = `البطل: ${gameState.studentName} 🌟`;
+            updateScoreDisplay();
+            loadQuestion();
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('current-score-val').innerText = toEasternDigits(gameState.score);
+        }
+
+        function loadQuestion() {
+            const currentQ = questionsData[gameState.currentIndex];
+
+            // Progress text
+            const qNum = toEasternDigits(gameState.currentIndex + 1);
+            const totalQ = toEasternDigits(questionsData.length);
+            document.getElementById('progress-text').innerText = `السؤال ${qNum} من ${totalQ}`;
+            
+            // Progress bar
+            const percent = ((gameState.currentIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar-fill').style.width = `${percent}%`;
+
+            // Section Header
+            document.getElementById('question-header-tag').innerText = currentQ.section;
+
+            // Question Text
+            document.getElementById('question-text').innerText = currentQ.question;
+
+            // Hide Feedback and Next button
+            const feedback = document.getElementById('feedback-banner');
+            feedback.classList.add('hidden');
+            feedback.className = 'hidden rounded-2xl p-4 text-center font-bold text-lg mb-4 transition-all';
+            
+            document.getElementById('next-btn').classList.add('hidden');
+
+            // Render Options Buttons
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            currentQ.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-card bg-white border-2 border-purple-100 hover:border-brand-purple hover:bg-purple-50 text-brand-dark font-extrabold text-2xl py-5 px-6 rounded-2xl shadow-sm text-center cursor-pointer transition-all flex items-center justify-center';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(opt, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        // Handle Option Selection
+        function selectOption(selectedOpt, btnElement) {
+            const currentQ = questionsData[gameState.currentIndex];
+            const allBtns = document.getElementById('options-grid').children;
+            const feedback = document.getElementById('feedback-banner');
+            const feedbackMsg = document.getElementById('feedback-message');
+
+            // Disable all buttons to prevent multiple clicks
+            for (let b of allBtns) {
+                b.disabled = true;
+                b.classList.remove('hover:border-brand-purple', 'hover:bg-purple-50');
+            }
+
+            const isCorrect = selectedOpt === currentQ.answer;
+
+            gameState.userAnswers.push({
+                question: currentQ.question,
+                section: currentQ.section,
+                userChoice: selectedOpt,
+                correctAnswer: currentQ.answer,
+                isCorrect: isCorrect
+            });
+
+            if (isCorrect) {
+                gameState.score += 1;
+                updateScoreDisplay();
+                playSound('correct');
+
+                btnElement.classList.remove('bg-white', 'border-purple-100');
+                btnElement.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600', 'shadow-lg');
+
+                feedback.classList.remove('hidden');
+                feedback.classList.add('bg-emerald-100', 'text-emerald-800', 'border', 'border-emerald-300');
+                feedbackMsg.innerText = `أحسنت يا ${gameState.studentName}! إجابة صحيحة ⭐👏`;
+
+                // Small burst of confetti
+                confetti({
+                    particleCount: 40,
+                    spread: 60,
+                    origin: { y: 0.7 }
+                });
+
+            } else {
+                playSound('wrong');
+
+                btnElement.classList.remove('bg-white', 'border-purple-100');
+                btnElement.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+
+                // Highlight correct button
+                for (let b of allBtns) {
+                    if (b.innerText === currentQ.answer) {
+                        b.classList.remove('bg-white', 'border-purple-100');
+                        b.classList.add('bg-emerald-100', 'text-emerald-800', 'border-emerald-400');
+                    }
+                }
+
+                feedback.classList.remove('hidden');
+                feedback.classList.add('bg-rose-100', 'text-rose-800', 'border', 'border-rose-300');
+                feedbackMsg.innerText = `حاول مرة أخرى في السؤال القادم يا ${gameState.studentName}! 💪`;
+            }
+
+            // Show Next Button
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            gameState.currentIndex++;
+            if (gameState.currentIndex < questionsData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show Final Screen
+        function showResults() {
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-results').classList.remove('hidden');
+            document.getElementById('header-score-tag').classList.add('hidden');
+
+            document.getElementById('results-student-name').innerText = `أحسنت يا ${gameState.studentName}!`;
+            
+            const finalScoreStr = `${toEasternDigits(gameState.score)} من ${toEasternDigits(questionsData.length)}`;
+            document.getElementById('final-score-display').innerText = finalScoreStr;
+
+            const motivational = document.getElementById('motivational-msg');
+            const starsContainer = document.getElementById('stars-rating');
+
+            if (gameState.score === questionsData.length) {
+                motivational.innerText = "ممتاز! أنت بطل التقريب 🌟👑";
+                starsContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>';
+                confetti({
+                    particleCount: 100,
+                    spread: 90,
+                    origin: { y: 0.5 }
+                });
+            } else if (gameState.score >= questionsData.length / 2) {
+                motivational.innerText = "عمل رائع! استمر في التدريب 💪✨";
+                starsContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>';
+            } else {
+                motivational.innerText = "حاول مرة أخرى وستصبح بطلاً في التقريب! 💪🎯";
+                starsContainer.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i>';
+            }
+        }
+
+        function restartGame() {
+            gameState.currentIndex = 0;
+            gameState.score = 0;
+            gameState.userAnswers = [];
+            
+            document.getElementById('screen-results').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('header-score-tag').classList.remove('hidden');
+            
+            updateScoreDisplay();
+            loadQuestion();
+        }
+
+        function toggleReviewModal(show) {
+            const modal = document.getElementById('review-modal');
+            if (show) {
+                const list = document.getElementById('review-list');
+                list.innerHTML = '';
+
+                gameState.userAnswers.forEach((ans, idx) => {
+                    const qNum = toEasternDigits(idx + 1);
+                    const card = document.createElement('div');
+                    card.className = `p-4 rounded-2xl border ${ans.isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`;
+                    
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-sm text-gray-500">سؤال ${qNum} - ${ans.section}</span>
+                            <span class="font-bold text-xs px-2.5 py-1 rounded-full ${ans.isCorrect ? 'bg-emerald-200 text-emerald-800' : 'bg-rose-200 text-rose-800'}">
+                                ${ans.isCorrect ? 'إجابة صحيحة ✓' : 'إجابة خاطئة ✗'}
+                            </span>
+                        </div>
+                        <p class="font-extrabold text-xl text-gray-800 mb-2">${ans.question}</p>
+                        <div class="text-sm font-semibold space-y-1">
+                            <p class="${ans.isCorrect ? 'text-emerald-700' : 'text-rose-700'}">إجابتك: ${ans.userChoice}</p>
+                            ${!ans.isCorrect ? `<p class="text-emerald-700">الإجابة الصحيحة: ${ans.correctAnswer}</p>` : ''}
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
